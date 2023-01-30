@@ -2,19 +2,21 @@ import jwt from "jsonwebtoken";
 
 function authenticate(req, res, next) {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split('')[1]
 
-    if(token === null){
-        return res.send("PLEASE PROVIDE TOKEN")
+    if (!authHeader) {
+        return res.status(401).send({ error: 'Unauthorized' });
     }
 
-    jwt.verify(token, process.env.TOKEN_SECRET || qwerty, (err, data) => {
-        if(err){
-            return res.send(err)
-        }else{
-            next()
+    const auth = authHeader.replace('Bearer ', '');
+    const token = auth.toString();
+
+    jwt.verify(token, process.env.TOKEN_SECRET || "qwerty", (err, data) => {
+        if (err) {
+            return res.status(401).send({ error: 'Invalid token' });
+        } else {
+            next();
         }
-    })
-    
+    });
 }
-export default authenticate
+
+export default authenticate;
