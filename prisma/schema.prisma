@@ -39,3 +39,42 @@ model User {
 
   @@map("users")
 }
+
+
+model Brand {
+id Int @id @default(autoincrement())
+name String
+image String?
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+
+@@map("brands")
+}
+
+model Category {
+id Int @id @default(autoincrement())
+name String
+image String
+subCategories SubCategory[]
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+
+@@map("categories")
+}
+
+model SubCategory {
+id Int @id @default(autoincrement())
+name String
+category Category @relation(fields: [categoryId], references: [id])
+categoryId Int
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+
+@@map("subcategories")
+}
+
+
+
+
+
+
